@@ -275,9 +275,10 @@ skipPruning:
     {
         S32 currMoveScore = getScore(moveList.moves[i]); // - BADNOISYMOVE;
         Move currMove = onlyMove(moveList.moves[i]);
+        const bool isQuiet = okToReduce(currMove);
         if (!skipQuiets) { 
             if (!PVNode && moveSearched >= lmpMargin[depth][improving]) skipQuiets = true;
-            if (!PVNode && depth <= 8 && std::abs(alpha) < KNOWNWIN && ss->staticEval + 250 + 60 * depth <= alpha) {
+            if (!PVNode && isQuiet && depth <= 8 && std::abs(alpha) < KNOWNWIN && ss->staticEval + 250 + 60 * depth <= alpha) {
                 skipQuiets = true;
                 continue;
             }
@@ -288,8 +289,6 @@ skipPruning:
         //     (excludedMove == currMove)
         // );
         if (!currMove) continue; // || currMove == excludedMove
-
-        const bool isQuiet = okToReduce(currMove);
         // const bool givesCheck = isCheck(currMove) || pos.inCheck();
         
         if (makeMove(currMove))
