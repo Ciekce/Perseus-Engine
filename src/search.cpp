@@ -277,6 +277,10 @@ skipPruning:
         Move currMove = onlyMove(moveList.moves[i]);
         if (!skipQuiets) { 
             if (!PVNode && moveSearched >= lmpMargin[depth][improving]) skipQuiets = true;
+            if (!PVNode && depth <= 8 && std::abs(alpha) < KNOWNWIN && ss->staticEval + 250 + 60 * depth <= alpha) {
+                skipQuiets = true;
+                continue;
+            }
         }
         else if (currMoveScore < COUNTERSCORE) continue;
         // assert (
